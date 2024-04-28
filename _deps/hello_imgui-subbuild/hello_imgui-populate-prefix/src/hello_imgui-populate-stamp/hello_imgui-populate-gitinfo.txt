@@ -1,0 +1,15 @@
+# This is a generated file and its contents are an internal implementation detail.
+# The download step will be re-executed if anything in this file changes.
+# No other meaning or use of this file is supported.
+
+method=git
+command=/opt/homebrew/Cellar/cmake/3.29.2/bin/cmake;-P;/Users/brnmarq/Documents/BrnCode/Cpp/hello_imgui_template/_deps/hello_imgui-subbuild/hello_imgui-populate-prefix/tmp/hello_imgui-populate-gitclone.cmake
+source_dir=/Users/brnmarq/Documents/BrnCode/Cpp/hello_imgui_template/_deps/hello_imgui-src
+work_dir=/Users/brnmarq/Documents/BrnCode/Cpp/hello_imgui_template/_deps
+repository=https://github.com/pthom/hello_imgui.git
+remote=origin
+init_submodules=TRUE
+recurse_submodules=--recursive
+submodules=
+CMP0097=NEW
+
