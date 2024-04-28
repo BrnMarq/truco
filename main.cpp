@@ -3,15 +3,17 @@
 int main(int , char *[])
 {
     auto guiFunction = []() {
-        ImGui::Text("Hello, ");   
-        ImVec2 vec(200, 300);
-        HelloImGui::ImageFromAsset("images/espadilla.png"); ImGui::SameLine();  // Display a static image
-        HelloImGui::ImageFromAsset("images/espadilla.png"); ImGui::SameLine();    // Display a static image
-        HelloImGui::ImageFromAsset("images/espadilla.png"); ImGui::SameLine();    // Display a static image
-        if (ImGui::Button("Bye!"))                 // Display a button
-            // and immediately handle its action if it is clicked!
+        ImVec2 vec(0, 0);
+        ImVec2 vec2(1, 1);
+        ImVec2 vec3(1, 0);
+        ImVec2 vec4(0, 1);
+
+        HelloImGui::ImageFromAsset("images/espadilla.png", vec2); ImGui::SameLine();
+        HelloImGui::ImageFromAsset("images/espadilla.png"); ImGui::SameLine();
+        HelloImGui::ImageFromAsset("images/espadilla.png"); ImGui::SameLine();
+        if (ImGui::Button("Bye!"))
             HelloImGui::GetRunnerParams()->appShallExit = true;
     };
-    HelloImGui::Run(guiFunction, "Trucardovich", true);
+    HelloImGui::Run(guiFunction, "Trucardovich");
     return 0;
 }
