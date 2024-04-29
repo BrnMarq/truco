@@ -6,27 +6,27 @@ int main()
     std::cout << std::boolalpha;
     
     std::cout << "Card value tests\n";
-    assert_equal(get_card_value(Card{Suit::Clubs, Rank::Ace}), 1);
+    assert_equal(get_card_value(Card{Suit::Clubs, Rank::One}), 1);
     assert_equal(get_card_value(Card{Suit::Clubs, Rank::Six}), 6);
-    assert_equal(get_card_value(Card{Suit::Clubs, Rank::Queen}), 12);
+    assert_equal(get_card_value(Card{Suit::Clubs, Rank::Twelve}), 12);
 
     std::cout << "Deck suit tests\n";
     assert_equal(are_all_same_suit(CardDeck::create_empty_deck()), true);
-    assert_equal(are_all_same_suit({Card{Suit::Clubs, Rank::Ace}}), true);
-    assert_equal(are_all_same_suit({Card{Suit::Clubs, Rank::Ace}, Card{Suit::Clubs, Rank::Two}}), true);
-    assert_equal(are_all_same_suit({Card{Suit::Clubs, Rank::Ace}, Card{Suit::Spades, Rank::Ace}}), false);
+    assert_equal(are_all_same_suit({Card{Suit::Clubs, Rank::One}}), true);
+    assert_equal(are_all_same_suit({Card{Suit::Clubs, Rank::One}, Card{Suit::Clubs, Rank::Two}}), true);
+    assert_equal(are_all_same_suit({Card{Suit::Clubs, Rank::One}, Card{Suit::Spades, Rank::One}}), false);
 
     std::cout << "Create hand test\n";
     {
         CardDeck expected_hand{
-            Card{Suit::Clubs, Rank::Ace},
+            Card{Suit::Clubs, Rank::One},
             Card{Suit::Clubs, Rank::Two},
             Card{Suit::Clubs, Rank::Three},
             Card{Suit::Clubs, Rank::Four},
             Card{Suit::Clubs, Rank::Five},
             Card{Suit::Clubs, Rank::Six},
             Card{Suit::Clubs, Rank::Seven},
-            Card{Suit::Clubs, Rank::Jack}
+            Card{Suit::Clubs, Rank::Ten}
         };
 
         CardDeck expected_deck = CardDeck::create_full_deck();
@@ -43,7 +43,7 @@ int main()
     std::cout << "Draw card test\n";
     {
         CardDeck expected_hand{
-            Card{Suit::Clubs, Rank::Ace},
+            Card{Suit::Clubs, Rank::One},
             Card{Suit::Clubs, Rank::Two},
             Card{Suit::Clubs, Rank::Three},
             Card{Suit::Clubs, Rank::Four}
@@ -61,7 +61,7 @@ int main()
     }
     {
         CardDeck expected_hand{
-            Card{Suit::Clubs, Rank::Ace},
+            Card{Suit::Clubs, Rank::One},
             Card{Suit::Clubs, Rank::Two},
             Card{Suit::Clubs, Rank::Three}
         };
@@ -78,7 +78,7 @@ int main()
     }
     {
         CardDeck expected_hand{
-            Card{Suit::Clubs, Rank::Ace},
+            Card{Suit::Clubs, Rank::One},
             Card{Suit::Clubs, Rank::Two}
         };
 
