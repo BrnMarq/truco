@@ -11,7 +11,7 @@ CardDeck CardDeck::create_full_deck(bool visible) noexcept
 
     for (Suit suit = Suit::Golds; suit < Suit::End; ++suit)
     {
-        for (Rank rank = Rank::Ace; rank < Rank::End; ++rank)
+        for (Rank rank = Rank::One; rank < Rank::End; ++rank)
         {
             result.push_back(Card{suit, rank, visible});
         }

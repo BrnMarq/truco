@@ -14,8 +14,8 @@ Card Card::create_random_card(rng_t& rng, bool visible) noexcept
     using rank_type = std::underlying_type<Rank>::type;
 
     std::uniform_int_distribution<rank_type> rank_dist{
-        static_cast<rank_type>(Rank::Ace),
-        static_cast<rank_type>(Rank::King)
+        static_cast<rank_type>(Rank::One),
+        static_cast<rank_type>(Rank::Twelve)
     };
 
     return Card{static_cast<Suit>(suit_dist(rng)), static_cast<Rank>(rank_dist(rng)), visible};

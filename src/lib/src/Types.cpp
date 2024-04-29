@@ -47,7 +47,7 @@ std::string to_string(Suit suit) noexcept
         case Suit::Golds: return "Golds";
         case Suit::Cups: return "Cups";
         case Suit::Clubs: return "Clubs";
-        case Suit::Spades: return "Swords";
+        case Suit::Spades: return "Spades";
         default: return "";
     }
 }
@@ -94,16 +94,16 @@ std::string to_string(Rank rank) noexcept
 {
     switch (rank)
     {
-        case Rank::Ace: return "Ace";
+        case Rank::One: return "One";
         case Rank::Two: return "Two";
         case Rank::Three: return "Three";
         case Rank::Four: return "Four";
         case Rank::Five: return "Five";
         case Rank::Six: return "Six";
         case Rank::Seven: return "Seven";
-        case Rank::Jack: return "Jack";
-        case Rank::Horse: return "Horse";
-        case Rank::King: return "King";
+        case Rank::Ten: return "Ten";
+        case Rank::Eleven: return "Eleven";
+        case Rank::Twelve: return "Twelve";
         default: return "";
     }
 }
