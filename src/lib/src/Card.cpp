@@ -8,7 +8,7 @@ Card Card::create_random_card(rng_t& rng, bool visible) noexcept
 
     std::uniform_int_distribution<suit_type> suit_dist{
         static_cast<suit_type>(Suit::Golds),
-        static_cast<suit_type>(Suit::Swords)
+        static_cast<suit_type>(Suit::Spades)
     };
 
     using rank_type = std::underlying_type<Rank>::type;

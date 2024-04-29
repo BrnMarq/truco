@@ -47,7 +47,7 @@ std::string to_string(Suit suit) noexcept
         case Suit::Golds: return "Golds";
         case Suit::Cups: return "Cups";
         case Suit::Clubs: return "Clubs";
-        case Suit::Swords: return "Swords";
+        case Suit::Spades: return "Swords";
         default: return "";
     }
 }

@@ -16,7 +16,7 @@ enum class Suit
     Golds, //oros
     Cups, //copas
     Clubs, //bastos
-    Swords, //espadas
+    Spades, //espadas
     End
 };
 
@@ -33,16 +33,16 @@ std::string to_string(Suit suit) noexcept;
 enum class Rank
 {
     REnd,
-    Ace,
+    One,
     Two,
     Three,
     Four,
     Five,
     Six,
     Seven,
-    Jack, //sota
-    Horse, //caballo
-    King, //rey
+    Ten, //sota
+    Eleven, //caballo
+    Twelve, //rey
     End
 };
 

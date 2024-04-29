@@ -14,7 +14,7 @@ int main()
     assert_equal(are_all_same_suit(CardDeck::create_empty_deck()), true);
     assert_equal(are_all_same_suit({Card{Suit::Clubs, Rank::Ace}}), true);
     assert_equal(are_all_same_suit({Card{Suit::Clubs, Rank::Ace}, Card{Suit::Clubs, Rank::Two}}), true);
-    assert_equal(are_all_same_suit({Card{Suit::Clubs, Rank::Ace}, Card{Suit::Swords, Rank::Ace}}), false);
+    assert_equal(are_all_same_suit({Card{Suit::Clubs, Rank::Ace}, Card{Suit::Spades, Rank::Ace}}), false);
 
     std::cout << "Create hand test\n";
     {
