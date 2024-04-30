@@ -9,9 +9,12 @@ if (NOT TARGET hello_imgui)
     FetchContent_MakeAvailable(hello_imgui)
 endif()
 
+include_directories("${CMAKE_SOURCE_DIR}/src/lib/include")
+FILE(GLOB SOURCES "${CMAKE_SOURCE_DIR}/src/lib/src/*.cpp")
+
 # Build your app
 # ==============
-hello_imgui_add_app(TrucoVenezolano main.cpp)
+hello_imgui_add_app(TrucoVenezolano main.cpp ${SOURCES})
 
 
 # hello_imgui_add_app is a helper function, similar to cmake's "add_executable"

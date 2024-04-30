@@ -1,6 +1,6 @@
 #include <functional>
 
-#include <Card.hpp>
+#include "Card.hpp"
 
 Card Card::create_random_card(rng_t& rng, bool visible) noexcept
 {

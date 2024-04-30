@@ -2,7 +2,7 @@
 
 #include <list>
 
-#include <Card.hpp>
+#include "Card.hpp"
 
 class CardDeck : public std::list<Card>
 {
