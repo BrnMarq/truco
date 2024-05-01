@@ -4,6 +4,7 @@
 #include <optional>
 #include <random>
 #include <sstream>
+#include <unordered_map>
 
 using rd_t = std::random_device;
 using rng_t = std::mt19937;
