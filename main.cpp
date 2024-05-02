@@ -5,13 +5,13 @@
 
 int main(int , char *[])
 {
+    rng_t mt(time(nullptr));
+    CardDeck deck = CardDeck::create_random_unique_deck(mt, 3, true);
     auto guiFunction = [&]() {
         ImVec2 vec(0, 0);
         ImVec2 vec2(1, 1);
         ImVec2 vec3(1, 0);
         ImVec2 vec4(0, 1);
-    rng_t mt(time(nullptr));
-    CardDeck deck = CardDeck::create_random_unique_deck(mt, 3, true);
 
         for (const auto& card: deck) {
             HelloImGui::ImageFromAsset(get_card_image(card).c_str()); ImGui::SameLine();
