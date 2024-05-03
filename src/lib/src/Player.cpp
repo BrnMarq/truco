@@ -1,5 +1,8 @@
 #include "Player.hpp"
 
+// As a general thought, take in mind that every member of the class Player is accesible
+// in this functions, as if it were variables inside the functions
+
 Player::Player() {
 };
 
