@@ -27,6 +27,11 @@ Card::Card(Suit s, Rank r, bool is_visible) noexcept
     // Empty
 }
 
+Card::Card() noexcept 
+{
+
+}
+
 Suit Card::get_suit() const noexcept
 {
     return suit;

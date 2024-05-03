@@ -9,6 +9,8 @@ public:
 
     Card(Suit s, Rank r, bool is_visible = true) noexcept;
 
+    Card() noexcept;
+
     Suit get_suit() const noexcept;
 
     Rank get_rank() const noexcept;
