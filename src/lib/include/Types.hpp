@@ -1,10 +1,12 @@
 #pragma once
 
 #include <iostream>
+#include <sstream>
 #include <optional>
 #include <random>
-#include <sstream>
 #include <unordered_map>
+#include <array>
+#include <list>
 
 using rd_t = std::random_device;
 using rng_t = std::mt19937;

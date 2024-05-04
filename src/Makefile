@@ -1,4 +1,4 @@
-CXX         = clang++ -std=c++17
+CXX         = g++ -std=c++17
 WARN        = -Wall -Wextra -Wcast-align -Wno-sign-compare -Wno-write-strings -Wno-parentheses -Wfloat-equal -pedantic
 
 INCLUDEPATH = -I$(LIB)/include

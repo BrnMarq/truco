@@ -5,6 +5,8 @@
 
 int main(int , char *[])
 {
+    std::list<int> t;
+    auto y = t.begin();
     rng_t mt(time(nullptr));
     CardDeck deck = CardDeck::create_random_unique_deck(mt, 3, true);
     auto guiFunction = [&]() {

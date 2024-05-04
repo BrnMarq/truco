@@ -3,7 +3,7 @@
 #include "Player.hpp"
 
 using CardValues = std::unordered_map<Card, int, CardHash>;
-using PlayerNode = std::__1::__list_iterator<Player, void *>;
+using PlayerNode = std::list<Player>::iterator;
 
 struct Play {
   PlayerNode player;
