@@ -14,12 +14,15 @@ Table::~Table()
 // This function should raise the value of the table by 1-3-6-9-12, preferably on a scalable way
 // if no idea found, I suggest to add 2 on the value if it's one, otherwise just add 3
 void Table::raise_value() {
-
+      if(value == 1) 
+        value += 2;
+      else 
+        value += 3;
 };
 
 // Like the function says, it just turns on the envido
 void Table::activate_envido() {
-
+    if(!envido)  envido = true;
 };
 
 // Calculate the staircase based on which is the vira(I suggest to go from 1-n, the greater the number,
