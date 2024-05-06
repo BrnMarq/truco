@@ -7,12 +7,16 @@
 Player::Player() {
 };
 
-Player::Player(CardDeck& cards): cards{cards}
+Player::Player(CardDeck& cards, std::string name): cards{cards}, name{name}
 {
 }
 
 Player::~Player()
 {
+}
+
+std::string Player::get_name() {
+  return name;
 }
 
 int Player::get_envido_value() {
