@@ -190,7 +190,8 @@ void Player::play_card(Card& card) {
 
 // This function should set the cards that are being passed, calculate the envido and calculate
 // if the player has flower
-void Player::set_cards(CardDeck& cards, Card& vira) {
-  calculate_envido(vira);
-  calculate_flower(vira);
+void Player::set_cards(CardDeck& cards_1, Card& vira) {
+  cards = cards_1;
+  envido_value = calculate_envido(vira);
+  has_flower = calculate_flower(vira);
 };
