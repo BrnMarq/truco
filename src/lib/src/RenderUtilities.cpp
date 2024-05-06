@@ -21,8 +21,9 @@ std::unordered_map<Rank, std::string> RANK_PATHS = {
 };
 
 std::string get_card_image(const Card& card) {
+  if (!card.is_visible()) return "images/reverse.jpg";
   std::string path = "images/";
   path += SUIT_PATHS[card.get_suit()] + "/";
-  path += RANK_PATHS[card.get_rank()] + ".JPG";
+  path += RANK_PATHS[card.get_rank()] + ".jpg";
   return path;
 };
