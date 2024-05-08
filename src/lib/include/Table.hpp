@@ -27,7 +27,7 @@ struct Team {
         points = 0;
     }
 
-    Team(Team& team) : players{ team.players }, points{ 0 }{
+    Team(const Team& team) : players{ team.players }, points{ 0 } {
 
     }
 };
@@ -51,14 +51,16 @@ public:
     void raise_value();
     void activate_envido();
 
+    void change_vira(Card card);
     CardValues get_card_values();
     CardValues calculate_staircase();
     void update_play_order();
-    Player get_next_player();
+    PlayerNode get_next_player();
 
     void play_card(Card& card, bool burnt);
 
     int get_team_position(Player player);
+    Team* get_envido_winner();
 
     PlayerNode* get_round_winner();
     void update_round_winners();
