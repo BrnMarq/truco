@@ -18,7 +18,7 @@ struct Play {
 };
 
 struct Team {
-    std::array<Player, 2> players;
+    std::array<Player,2> players;
     int points;
 
     Team(Player& player1, Player& player2) {
@@ -27,7 +27,7 @@ struct Team {
         points = 0;
     }
 
-    Team(Team& team) : players{ team.players }, points{ 0 } {
+    Team(Team& team) : players{ team.players }, points{ 0 }{
 
     }
 };
@@ -39,16 +39,14 @@ private:
     bool envido;
     Card vira;
     CardValues staircase;
-    std::array<Play, 4> plays;
-    std::array<Team*, 3> round_winners;
-    std::array<Team, 2> teams;
+    std::vector<Play> plays;
+    std::vector<Team*> round_winners;
+    std::vector<Team> teams;
     std::list<Player> play_order;
     PlayerNode current_player;
 public:
-    Table(Card& vira, std::array<Team, 2> teams);
+    Table(Card& vira, std::vector<Team> teams);
     ~Table();
-
-    int position = 0;
 
     void raise_value();
     void activate_envido();
@@ -56,12 +54,13 @@ public:
     CardValues get_card_values();
     CardValues calculate_staircase();
     void update_play_order();
-    void initialize_current_player();
     Player get_next_player();
 
     void play_card(Card& card, bool burnt);
 
-    PlayerNode get_round_winner();
+    int get_team_position(Player player);
+
+    PlayerNode* get_round_winner();
     void update_round_winners();
     Team get_table_winner();
     Team* get_game_winner();

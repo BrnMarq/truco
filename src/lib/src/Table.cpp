@@ -3,8 +3,12 @@
 // As a general thought, take in mind that every member of the class Table is accesible
 // in this functions, as if it were variables inside the functions
 
-Table::Table(Card& vira, std::array<Team, 2> teams) : vira{ vira }, teams{ teams }
+Table::Table(Card& vira, std::vector<Team> teams) : vira{ vira }, teams{ teams }
 {
+    value = 1;
+    envido = false;
+    update_play_order();
+    current_player = play_order.begin();
 }
 
 Table::~Table()
@@ -15,9 +19,7 @@ Table::~Table()
 // if no idea found, I suggest to add 2 on the value if it's one, otherwise just add 3
 void Table::raise_value() {
 
-    if (value == 0)
-        value = 1;
-    else if (value == 1)
+    if (value == 1)
         value += 2;
     else
         value += 3;
@@ -86,79 +88,14 @@ CardValues Table::get_card_values()
 CardValues Table::calculate_staircase() {
 
     CardValues result = get_card_values();
-    
-    if(vira.get_suit() == Suit::Clubs)
-    {
-        if(vira.get_rank() != Rank::Ten && vira.get_rank() != Rank::Eleven)
-        {
-            result[Card(Suit::Clubs, Rank::Ten)] = 15;
-            result[Card(Suit::Clubs, Rank::Eleven)] = 16;     
-        }
-        else if(vira.get_rank() == Rank::Ten)
-        {
-            result[Card(Suit::Clubs, Rank::Twelve)] = 15;
-            result[Card(Suit::Clubs, Rank::Eleven)] = 16;
-        }
-        else
-        {
-            result[Card(Suit::Clubs, Rank::Ten)] = 15;
-            result[Card(Suit::Clubs, Rank::Twelve)] = 16;
-        }  
-    }
-    else if (vira.get_suit() == Suit::Golds) 
-    {
-        if (vira.get_rank() != Rank::Ten && vira.get_rank() != Rank::Eleven)
-        {
-            result[Card(Suit::Golds, Rank::Ten)] = 15;
-            result[Card(Suit::Golds, Rank::Eleven)] = 16;
-        }
-        else if(vira.get_rank() == Rank::Ten)
-        {
-            result[Card(Suit::Golds, Rank::Twelve)] = 15;
-            result[Card(Suit::Golds, Rank::Eleven)] = 16;
-        }
-        else 
-        {
-            result[Card(Suit::Golds, Rank::Ten)] = 15;
-            result[Card(Suit::Golds, Rank::Twelve)] = 16;
-        }
-    }
-    else if (vira.get_suit() == Suit::Spades)
-    {
-        if (vira.get_rank() != Rank::Ten && vira.get_rank() != Rank::Eleven)
-        {
-            result[Card(Suit::Spades, Rank::Ten)] = 15;
-            result[Card(Suit::Spades, Rank::Eleven)] = 16;
-        }
-        else if (vira.get_rank() == Rank::Ten)
-        {
-            result[Card(Suit::Spades, Rank::Twelve)] = 15;
-            result[Card(Suit::Spades, Rank::Eleven)] = 16;
-        }
-        else
-        {
-            result[Card(Suit::Spades, Rank::Ten)] = 15;
-            result[Card(Suit::Spades, Rank::Twelve)] = 16;
-        }
-    }
-    else
-    {
-        if (vira.get_rank() != Rank::Ten && vira.get_rank() != Rank::Eleven)
-        {
-            result[Card(Suit::Cups, Rank::Ten)] = 15;
-            result[Card(Suit::Cups, Rank::Eleven)] = 16;
-        }
-        else if (vira.get_rank() == Rank::Ten)
-        {
-            result[Card(Suit::Cups, Rank::Twelve)] = 15;
-            result[Card(Suit::Cups, Rank::Eleven)] = 16;
-        }
-        else
-        {
-            result[Card(Suit::Cups, Rank::Ten)] = 15;
-            result[Card(Suit::Cups, Rank::Twelve)] = 16;
-        }
-    }
+
+    result[Card(vira.get_suit(), Rank::Ten)] = 15;
+    result[Card(vira.get_suit(), Rank::Eleven)] = 16;
+
+    if (vira.get_rank() == Rank::Ten)
+        result[Card(vira.get_suit(), Rank::Twelve)] = 15;
+    else if (vira.get_rank() == Rank::Eleven)
+        result[Card(vira.get_suit(), Rank::Twelve)] = 16;
 
     return result;
 };
@@ -180,12 +117,6 @@ void Table::update_play_order() {
     }
 };
 
-//This function should be called in the first round since the current player in this round is always the first player in the list.
-void Table::initialize_current_player()
-{
-    current_player = play_order.begin();
-}
-
 // current_player is a node on the play_order list, executing std::next on that node should get you the next on the list
 // be aware that play_order is not a circular list, once you reach the end of the list, return *std::begin
 Player Table::get_next_player() {
@@ -202,37 +133,127 @@ Player Table::get_next_player() {
 // the player in the node)
 void Table::play_card(Card& card, bool burnt) {
 
-    plays[position].player = current_player;
-    plays[position].card = card;
-    plays[position].burnt = burnt;
-    position++;
+    plays.push_back(Play::Play(current_player,card,burnt));
 };
 
 // This function should get who wins based on plays array
-PlayerNode Table::get_round_winner() {
-    static std::list<Player> players;
-    return players.begin();
+PlayerNode* Table::get_round_winner() {
+
+    CardValues card_values = calculate_staircase(); 
+
+    int p1_points = plays[0].burnt ? 0 : card_values[plays[0].card];
+    int p2_points = plays[1].burnt ? 0 : card_values[plays[1].card];
+    int p3_points = plays[2].burnt ? 0 : card_values[plays[2].card];
+    int p4_points = plays[3].burnt ? 0 : card_values[plays[3].card];
+
+    if (p1_points > p2_points && p1_points > p3_points && p1_points > p4_points)
+    {
+        return &plays[0].player;
+    }
+    else if (p2_points > p1_points && p2_points > p3_points && p2_points > p4_points)
+    {
+        return &plays[1].player;
+    }
+    else if (p3_points > p1_points && p3_points > p2_points && p3_points > p4_points)
+    {
+        return &plays[2].player;
+    }
+    else if (p4_points > p1_points && p4_points > p2_points && p4_points > p3_points)
+    {
+        return &plays[3].player;
+    }
+    else
+        return nullptr;  
 };
 
+int Table::get_team_position(Player player) 
+{
+    for (size_t i = 0; i < 2; i++)
+    {
+        for (size_t j = 0; j < 2; j++)
+        {
+            if (teams[i].players[j].get_name() == player.get_name())
+                return i;
+        }
+    }
+}
 // This function should get the round winner, set the winner as current_player, and add round_winners
 // array which team won(round_winners array works in the way that, nullptr is a tie, ptr to team1 is team1 winner and so on)
 void Table::update_round_winners() {
 
+    auto winner = get_round_winner();
+
+    if (winner != nullptr) 
+    {
+        current_player = *winner;
+        round_winners.push_back(&teams[get_team_position(*current_player)]);
+    }
+    else 
+    {
+        get_next_player();
+        round_winners.push_back(nullptr);
+    }
 };
 
 // This function should calculate which team won the table based on the round_winners array
 Team Table::get_table_winner() {
-    Player player;
-    Team team(player, player);
-    return team;
+
+    //Caso donde un equipo gana 2 veces y no hay empates
+
+    std::unordered_map<Team*, int> counter;
+
+    for (auto winner : round_winners)
+    {
+        if (winner != nullptr) {
+            counter[winner]++;
+        }
+    }
+
+    for (const auto& pair : counter)
+    {
+        if (pair.second == 2) {
+            return *pair.first;
+        }
+    }
+
+    //Casos de empate
+
+    if (round_winners[0] == nullptr && round_winners[1] != nullptr)
+        return *round_winners[1];
+    else if (round_winners[1] == nullptr && round_winners[0] != nullptr)
+        return *round_winners[0];
+    else if(round_winners[2] == nullptr && round_winners[0] != nullptr)
+        return *round_winners[0];
+    else if(round_winners[0] == nullptr && round_winners[1] == nullptr && round_winners[2] != nullptr)
+        return *round_winners[2];
+    else
+        return *round_winners[0];
+
+    // Esto serviría para empate en primera ronda y empate en última pero no se me ocurrió una manera para evaluarlo con
+    //empate en segunda o los otros casos de empate 
+
+   /* auto tie = std::find_if(round_winners.begin(), round_winners.end(), std::vector<Team*>{nullptr});
+
+    if (tie != round_winners.end()) 
+    {
+        auto winner = *std::next(tie);
+
+        if (winner == *round_winners.end()) 
+        {
+            winner = *round_winners.begin();
+            return  *winner;
+        }
+    }*/
+
 };
 
 // This function should check if there's a winner, if the points of one of the teams is greater than twelve
 // then return a pointer to that theam, otherwise, just return nullptr
 Team* Table::get_game_winner() {
-    Player player;
-    static Team team(player, player);
-    return &team;
+
+    if (teams[0].points > 12) return &teams[0];
+    else if (teams[1].points > 12) return &teams[1];
+    else return nullptr;
 };
 
 // update_table should get the table winner, update the play_order, set the current_player as the beginning of the list
