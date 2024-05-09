@@ -106,9 +106,10 @@ void Table::update_play_order() {
 
     if (play_order.size() == 0) 
     {
-        for (int i = 0; i < 2; i++)
-            for (int j = 0; j < 2; j++)
-                 play_order.push_back(teams[i].players[j]);
+        play_order.push_back(teams[0].players[0]);
+        play_order.push_back(teams[1].players[0]);
+        play_order.push_back(teams[0].players[1]);
+        play_order.push_back(teams[1].players[1]);
     }
     else 
     {
@@ -210,8 +211,7 @@ Team Table::get_table_winner() {
             if (counter[winner] == 2) {
                 return *winner;
             }
-        }
-        
+        }       
     }
 
     //Casos de empate
@@ -254,7 +254,7 @@ Team* Table::get_envido_winner() {
        return &teams[get_team_position(*plays[0].player)];
     else
        return &teams[get_team_position(*plays[1].player)];
-};
+}
 
 // update_table should get the table winner, update the play_order, set the current_player as the beginning of the list
 // add the value of the table to the points of the team, add the envido value, in case there was envido
