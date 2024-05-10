@@ -19,6 +19,8 @@ public:
     static CardDeck create_random_unique_deck(rng_t& rng, size_t expected_n, bool visible = true) noexcept;
 
     void shuffle(rng_t& rng) noexcept;
+
+    Card get_card() noexcept;
 };
 
 std::string to_string(const CardDeck& deck) noexcept;

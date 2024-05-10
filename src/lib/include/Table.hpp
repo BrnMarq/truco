@@ -45,7 +45,8 @@ private:
     std::list<Player> play_order;
     PlayerNode current_player;
 public:
-    Table(Card& vira, std::vector<Team> teams);
+    Table(Card& vira, std::vector<Team>& teams);
+    Table(Card& vira, std::vector<Player>& players);
     ~Table();
 
     void raise_value();

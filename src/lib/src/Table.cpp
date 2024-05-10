@@ -3,12 +3,21 @@
 // As a general thought, take in mind that every member of the class Table is accesible
 // in this functions, as if it were variables inside the functions
 
-Table::Table(Card& vira, std::vector<Team> teams) : vira{ vira }, teams{ teams }
+Table::Table(Card& vira, std::vector<Team>& teams) : vira{ vira }, teams{ teams }
 {
     value = 1;
     envido = false;
     update_play_order();
     current_player = play_order.begin();
+}
+
+Table::Table(Card& vira, std::vector<Player>& players) : vira{ vira }
+{
+    std::vector<Team> new_teams;
+    for (int i = 0; i < 2; ++i) {
+        new_teams.push_back(Team(players[i], players[i + 2]));
+    }
+    Table(vira, new_teams);
 }
 
 Table::~Table()

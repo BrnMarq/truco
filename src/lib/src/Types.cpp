@@ -107,3 +107,54 @@ std::string to_string(Rank rank) noexcept
         default: return "";
     }
 }
+
+
+HandPosition& operator ++ (HandPosition& hand_position)
+{
+    if (hand_position == HandPosition::End)
+    {
+        throw std::underflow_error{"hand_position cannot be incremented"};
+    }
+
+    using base_type = std::underlying_type<HandPosition>::type;
+    hand_position = static_cast<HandPosition>(static_cast<base_type>(hand_position) + 1);
+    return hand_position;
+}
+
+HandPosition operator ++ (HandPosition& hand_position, int)
+{
+    HandPosition result = hand_position;
+    ++hand_position;
+    return result;
+}
+
+HandPosition& operator -- (HandPosition& hand_position)
+{
+    if (hand_position == HandPosition::REnd)
+    {
+        throw std::underflow_error{"hand_position cannot be decremented"};
+    }
+
+    using base_type = std::underlying_type<HandPosition>::type;
+    hand_position = static_cast<HandPosition>(static_cast<base_type>(hand_position) - 1);
+    return hand_position;
+}
+
+HandPosition operator -- (HandPosition& hand_position, int)
+{
+    HandPosition result = hand_position;
+    --hand_position;
+    return result;
+}
+
+std::string to_string(HandPosition hand_position) noexcept
+{
+    switch (hand_position)
+    {
+        case HandPosition::Bottom: return "Bottom";
+        case HandPosition::Right: return "Right";
+        case HandPosition::Top: return "Top";
+        case HandPosition::Left: return "Left";
+        default: return "";
+    }
+}

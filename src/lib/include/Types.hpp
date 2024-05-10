@@ -61,3 +61,23 @@ Rank& operator -- (Rank& rank);
 Rank operator -- (Rank& rank, int);
 
 std::string to_string(Rank rank) noexcept;
+
+enum class HandPosition
+{
+    REnd,
+    Bottom,
+    Right,
+    Top,
+    Left,
+    End
+};
+
+HandPosition& operator ++ (HandPosition& hand_position);
+
+HandPosition operator ++ (HandPosition& hand_position, int);
+
+HandPosition& operator -- (HandPosition& hand_position);
+
+HandPosition operator -- (HandPosition& hand_position, int);
+
+std::string to_string(HandPosition hand_position) noexcept;

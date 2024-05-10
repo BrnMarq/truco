@@ -68,6 +68,13 @@ void CardDeck::shuffle(rng_t& rng) noexcept
     }
 }
 
+Card CardDeck::get_card() noexcept
+{
+    Card card = back();
+    pop_back();
+    return card;
+}
+
 std::string to_string(const CardDeck& deck) noexcept
 {
     std::stringstream s;
