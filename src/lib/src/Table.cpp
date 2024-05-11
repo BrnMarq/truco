@@ -176,6 +176,8 @@ PlayerNode* Table::get_round_winner() {
         return nullptr;
 };
 
+//This function returns the player's team position on the teams vector. It'll return just 0 or 1
+//since teams vector just contains 2 elements. 
 int Table::get_team_position(Player player) 
 {
     for (size_t i = 0; i < 2; i++)
@@ -208,7 +210,7 @@ void Table::update_round_winners() {
 // This function should calculate which team won the table based on the round_winners array
 Team Table::get_table_winner() {
 
-    //Caso donde un equipo gana 2 veces y no hay empates
+    //No tie case
 
     std::unordered_map<Team*, int> counter;
 
@@ -223,7 +225,7 @@ Team Table::get_table_winner() {
         }       
     }
 
-    //Casos de empate
+    //Tie cases
 
     if (round_winners[0] == nullptr && round_winners[1] != nullptr)
         return *round_winners[1];
@@ -246,6 +248,7 @@ Team* Table::get_game_winner() {
     else return nullptr;
 };
 
+//This function returns the team with the highest envido 
 Team* Table::get_envido_winner() {
 
     int player_1 = (*plays[0].player).get_envido_value();
