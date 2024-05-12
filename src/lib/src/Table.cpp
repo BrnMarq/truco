@@ -13,11 +13,13 @@ Table::Table(Card& vira, std::vector<Team>& teams) : vira{ vira }, teams{ teams 
 
 Table::Table(Card& vira, std::vector<Player>& players) : vira{ vira }
 {
-    std::vector<Team> new_teams;
     for (int i = 0; i < 2; ++i) {
-        new_teams.push_back(Team(players[i], players[i + 2]));
+        teams.push_back(Team(players[i], players[i + 2]));
     }
-    Table(vira, new_teams);
+    value = 1;
+    envido = false;
+    update_play_order();
+    current_player = play_order.begin();
 }
 
 Table::~Table()
@@ -37,7 +39,27 @@ void Table::raise_value() {
 // Like the function says, it just turns on the envido
 void Table::activate_envido() {
     if (!envido)  envido = true;
-};
+}
+
+Player Table::get_first_player() const {
+    return play_order.front();
+}
+
+Card Table::get_vira() const {
+    return vira;
+}
+
+std::vector<Play> Table::get_plays() const {
+    return plays;
+}
+
+std::vector<Player> Table::get_players() const {
+    std::vector<Player> players;
+    for (int i = 0; i < 2; ++i)
+        for (int j = 0; j < 2; ++j)
+            players.push_back(teams[i].players[j]);
+    return players;
+}
 
 //This function returns a generic CardValue 
 CardValues Table::get_card_values()
@@ -142,8 +164,9 @@ PlayerNode Table::get_next_player() {
 // This function should add the card and the current player to plays array(The current player node, not
 // the player in the node)
 void Table::play_card(Card& card, bool burnt) {
-
-    plays.push_back(Play(current_player,card,burnt));
+    current_player->play_card(card);
+    plays.push_back(Play(current_player, card, burnt));
+    current_player = get_next_player();
 };
 
 // This function should get who wins based on plays array

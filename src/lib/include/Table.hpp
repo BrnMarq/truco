@@ -51,6 +51,10 @@ public:
 
     void raise_value();
     void activate_envido();
+    Player get_first_player() const;
+    Card get_vira() const;
+    std::vector<Play> get_plays() const;
+    std::vector<Player> get_players() const;
 
     void change_vira(Card card);
     CardValues get_card_values();
@@ -58,7 +62,7 @@ public:
     void update_play_order();
     PlayerNode get_next_player();
 
-    void play_card(Card& card, bool burnt);
+    void play_card(Card& card, bool burnt = false);
 
     int get_team_position(Player player);
     Team* get_envido_winner();

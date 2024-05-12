@@ -15,24 +15,18 @@ Player::~Player()
 {
 }
 
-std::string Player::get_name() {
-  return name;
-}
+std::string Player::get_name() const { return name; }
 
-int Player::get_envido_value() {
-  return envido_value;
-};
+int Player::get_envido_value() const { return envido_value; };
   
-bool Player::get_has_flower() {
-  return has_flower;
-};
+bool Player::get_has_flower() const { return has_flower; };
 
-bool Player::get_can_raise_value() {
-  return can_raise_value;
-};
+bool Player::get_can_raise_value() const { return can_raise_value; }
+
+CardDeck Player::get_cards() const { return cards; }
 
 // This function should calculate the envido based on which suit is the vira
-int Player::calculate_envido(Card& vira) {
+int Player::calculate_envido(const Card& vira) {
 
   std::map<std::tuple <Rank, Suit>, int> table_value;
 
@@ -176,7 +170,7 @@ int Player::calculate_envido(Card& vira) {
 };
 
 // This function should calculate if the player have flower or not
-bool Player::calculate_flower(Card& vira) {
+bool Player::calculate_flower(const Card& vira) {
   auto i = cards.begin();
   auto j = std::next(i,1);
   auto k = std::next(j,1);
@@ -194,8 +188,22 @@ void Player::play_card(Card& card) {
 
 // This function should set the cards that are being passed, calculate the envido and calculate
 // if the player has flower
-void Player::set_cards(CardDeck& cards_1, Card& vira) {
+void Player::set_cards(const CardDeck& cards_1, const Card& vira) {
   cards = cards_1;
   envido_value = calculate_envido(vira);
   has_flower = calculate_flower(vira);
+};
+
+bool Player::operator == (const Player& player) const noexcept
+{
+  return name == player.get_name();
+}
+
+bool Player::operator != (const Player& player) const noexcept
+{
+    return name != player.get_name();
+}
+
+size_t PlayerHash::operator () (const Player& p) const noexcept {
+  return std::hash<std::string>()(p.get_name());
 };
