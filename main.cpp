@@ -73,7 +73,7 @@ PositionsMap get_positions(int card_amount) {
             vector.x = is_right ? window.x - card_size.y + 20 : 20;
             result = std::make_pair(vector, is_right ? M_PI : 0.0);
         }
-        positions_map.insert({position, result});
+        positions_map.insert(std::make_pair(position, result));
     }
     return positions_map;
 }
@@ -96,7 +96,7 @@ PositionsMap get_vira_positions() {
             vector.y = window.y * (is_left ?  1 / 6.0 : 2 / 3.0);
         }
         result = std::make_pair(vector, (M_PI / 4) + (i++ * (M_PI / 2)));
-        positions_map.insert({position, result});
+        positions_map.insert(std::make_pair(position, result));
     }
     return positions_map;
 }
@@ -124,7 +124,7 @@ PositionsMap get_plays_positions() {
             else vector.x -= (70 + card_size.y);
             result = std::make_pair(vector, is_right ? M_PI : 0.0);
         }
-        positions_map.insert({position, result});
+        positions_map.insert(std::make_pair(position, result));
     }
     return positions_map;
 }
@@ -133,7 +133,7 @@ PlayersMap get_players_positions(const std::vector<Player>& players) {
     PlayersMap players_positions;
     int i = 0;
     for (HandPosition position = HandPosition::Bottom; position < HandPosition::End; ++position) {
-        players_positions[players[i]] = position;
+        players_positions.insert(std::make_pair(players[i], position));
         ++i;
     }
     return players_positions;
