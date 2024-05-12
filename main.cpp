@@ -51,14 +51,6 @@ void hand(CardDeck& cards, const ImVec2& starting_position, double radians = (M_
     }
 }
 
-void remove_card_from_hand(CardDeck& hand, const Card& card) {
-    ImVec2 card_size = Config::default_card_size;
-    ImVec2 center = ImVec2(ImGui::GetWindowSize().x / 2, ImGui::GetWindowSize().y / 2);
-    hand.remove(card);
-    ImGui::SetCursorPos(ImVec2(center.x - (card_size.x / 2), center.y + Config::card_spacing));
-    HelloImGui::ImageFromAsset(get_card_image(card).c_str(), card_size);
-}
-
 // Only use inside ui function
 PositionsMap get_positions(int card_amount) {
     PositionsMap positions_map;
@@ -81,7 +73,7 @@ PositionsMap get_positions(int card_amount) {
             vector.x = is_right ? window.x - card_size.y + 20 : 20;
             result = std::make_pair(vector, is_right ? M_PI : 0.0);
         }
-        positions_map[position] = result;
+        positions_map.insert({position, result});
     }
     return positions_map;
 }
@@ -104,7 +96,7 @@ PositionsMap get_vira_positions() {
             vector.y = window.y * (is_left ?  1 / 6.0 : 2 / 3.0);
         }
         result = std::make_pair(vector, (M_PI / 4) + (i++ * (M_PI / 2)));
-        positions_map[position] = result;
+        positions_map.insert({position, result});
     }
     return positions_map;
 }
@@ -132,7 +124,7 @@ PositionsMap get_plays_positions() {
             else vector.x -= (70 + card_size.y);
             result = std::make_pair(vector, is_right ? M_PI : 0.0);
         }
-        positions_map[position] = result;
+        positions_map.insert({position, result});
     }
     return positions_map;
 }
@@ -181,6 +173,7 @@ int main(int , char *[])
     params.appWindowParams.windowGeometry.fullScreenMode = Config::screen_mode;
 
     auto guiFunction = [&]() {
+        players = table.get_players();
         PositionsMap vira_positions = get_vira_positions();
         PositionsMap plays_positions = get_plays_positions();
 

@@ -24,7 +24,7 @@ public:
 
   int calculate_envido(const Card& vira) ;
   bool calculate_flower(const Card& vira);
-  void play_card(Card& card);
+  void play_card(const Card& card);
   
   void set_cards(const CardDeck& cards, const Card& vira);
 

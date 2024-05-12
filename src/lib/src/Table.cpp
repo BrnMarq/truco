@@ -58,11 +58,12 @@ std::vector<Play> Table::get_plays() const {
 }
 
 std::vector<Player> Table::get_players() const {
-    std::vector<Player> players;
-    for (int i = 0; i < 2; ++i)
-        for (int j = 0; j < 2; ++j)
-            players.push_back(teams[j].players[i]);
+    std::vector<Player> players{ std::begin(play_order), std::end(play_order) };
     return players;
+}
+
+std::list<Player> Table::get_play_order() const {
+    return play_order;
 }
 
 //This function returns a generic CardValue 

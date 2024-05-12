@@ -56,6 +56,7 @@ public:
     Card get_vira() const;
     std::vector<Play> get_plays() const;
     std::vector<Player> get_players() const;
+    std::list<Player> get_play_order() const;
 
     void change_vira(Card card);
     CardValues get_card_values();

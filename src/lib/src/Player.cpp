@@ -182,7 +182,7 @@ bool Player::calculate_flower(const Card& vira) {
 };
 
 // This function should remove the card that is being passed on from the cards list
-void Player::play_card(Card& card) {
+void Player::play_card(const Card& card) {
   cards.remove(card);
 };
 

@@ -22,6 +22,14 @@ int main() {
     Card vira = full_deck.get_card();
     Table table = Table(vira, players);
     std::cout << "Size play_order test" << std::endl;
-    std::cout << "Pruebita" << std::endl;
+    table.play_card(table.get_current_player().get_cards().front());
+    std::list<Player> table_players = table.get_play_order();
+    for (const auto& player: table_players) {
+      std::cout << player.get_cards().size() << std::endl;
+    }
+    // int a = 2;
+    // std::list<int> test = { a };
+    // test.back() = 7;
+    // std::cout << a << std::endl;
   }
 };
