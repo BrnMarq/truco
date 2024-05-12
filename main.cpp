@@ -160,6 +160,7 @@ Table initialize_game(rng_t& seed) {
 int main(int , char *[])
 {
     HelloImGui::RunnerParams params;
+    HelloImGui::SetAssetsFolder("assets");
     ImVec2 card_size = Config::default_card_size;
     rng_t seed(time(nullptr));
 
