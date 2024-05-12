@@ -133,7 +133,7 @@ PlayersMap get_players_positions(const std::vector<Player>& players) {
     PlayersMap players_positions;
     int i = 0;
     for (HandPosition position = HandPosition::Bottom; position < HandPosition::End; ++position) {
-        players_positions.insert(std::make_pair(players[i], position));
+        players_positions[players[i]] = position;
         ++i;
     }
     return players_positions;
@@ -166,13 +166,14 @@ int main(int , char *[])
 
     Table table = initialize_game(seed);
     std::vector<Player> players = table.get_players();
+    Player game_player = players[0];
     
     PlayersMap players_positions = get_players_positions(players);
 
     params.appWindowParams.windowTitle = Config::title;
     params.imGuiWindowParams.backgroundColor = Config::background_color;
     params.appWindowParams.windowGeometry.fullScreenMode = Config::screen_mode;
-
+    int i = 0;
     auto guiFunction = [&]() {
         players = table.get_players();
         PositionsMap vira_positions = get_vira_positions();
@@ -184,6 +185,8 @@ int main(int , char *[])
         HandPosition first_player_position = players_positions[first_player];
         std::vector<Play> plays = table.get_plays();
 
+        bool is_player_turn = game_player == current_player;
+
         auto play_card = [&](Card card) {
             table.play_card(card);
         };
@@ -192,8 +195,7 @@ int main(int , char *[])
             PositionsMap positions = get_positions(cards.size());
             HandPosition player_position = players_positions[player];
             auto [position, radians] = positions[player_position];
-            bool is_turn = player == current_player;
-            hand(cards, position, radians, play_card, is_turn);
+            hand(cards, position, radians, play_card, is_player_turn);
         }
 
         for (const auto& play: plays) {
@@ -205,6 +207,13 @@ int main(int , char *[])
 
         auto [vira_position, vira_radians] = vira_positions[first_player_position];
         card(vira, vira_position, vira_radians);
+
+        if (is_player_turn) return;
+
+        if (++i == 100) {
+            play_card(table.get_current_player().get_cards().front());
+            i = 0;
+        }
     };
 
     params.callbacks.ShowGui = guiFunction;

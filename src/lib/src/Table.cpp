@@ -170,6 +170,7 @@ PlayerNode Table::get_next_player() {
 // the player in the node)
 void Table::play_card(Card& card, bool burnt) {
     current_player->play_card(card);
+    if (!card.is_visible() && !burnt) card.flip();
     plays.push_back(Play(current_player, card, burnt));
     current_player = get_next_player();
 };
