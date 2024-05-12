@@ -59,7 +59,7 @@ PositionsMap get_positions(int card_amount) {
     ImVec2 card_size = Config::default_card_size;
     double offset = (card_amount * card_size.x / 2);
     for (HandPosition position = HandPosition::Bottom; position < HandPosition::End; ++position) {
-        std::tuple<ImVec2, double> result;
+        std::pair<ImVec2, double> result;
         ImVec2 vector;
         if (position == HandPosition::Bottom || position == HandPosition::Top) {
             bool is_bottom = position == HandPosition::Bottom;
@@ -73,7 +73,7 @@ PositionsMap get_positions(int card_amount) {
             vector.x = is_right ? window.x - card_size.y + 20 : 20;
             result = std::make_pair(vector, is_right ? M_PI : 0.0);
         }
-        positions_map.insert(std::make_pair(position, result));
+        positions_map[position] = result;
     }
     return positions_map;
 }
@@ -83,7 +83,7 @@ PositionsMap get_vira_positions() {
     ImVec2 window = ImGui::GetWindowSize();
     int i = 0;
     for (HandPosition position = HandPosition::Bottom; position < HandPosition::End; ++position) {
-        std::tuple<ImVec2, double> result;
+        std::pair<ImVec2, double> result;
         ImVec2 vector;
         if (position == HandPosition::Right || position == HandPosition::Top) {
             bool is_right = position == HandPosition::Right;
@@ -96,7 +96,7 @@ PositionsMap get_vira_positions() {
             vector.y = window.y * (is_left ?  1 / 6.0 : 2 / 3.0);
         }
         result = std::make_pair(vector, (M_PI / 4) + (i++ * (M_PI / 2)));
-        positions_map.insert(std::make_pair(position, result));
+        positions_map[position] = result;
     }
     return positions_map;
 }
@@ -106,7 +106,7 @@ PositionsMap get_plays_positions() {
     ImVec2 center = ImGui::GetWindowSize() / 2;
     ImVec2 card_size = Config::default_card_size;
     for (HandPosition position = HandPosition::Bottom; position < HandPosition::End; ++position) {
-        std::tuple<ImVec2, double> result;
+        std::pair<ImVec2, double> result;
         ImVec2 vector;
         if (position == HandPosition::Bottom || position == HandPosition::Top) {
             bool is_bottom = position == HandPosition::Bottom;
@@ -124,7 +124,7 @@ PositionsMap get_plays_positions() {
             else vector.x -= (70 + card_size.y);
             result = std::make_pair(vector, is_right ? M_PI : 0.0);
         }
-        positions_map.insert(std::make_pair(position, result));
+        positions_map[position] = result;
     }
     return positions_map;
 }
