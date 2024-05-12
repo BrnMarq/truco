@@ -25,9 +25,9 @@ void placeholder_card_click(const Card& card) {
     return;
 }
 
-void hand(CardDeck& cards, const ImVec2& starting_position, double radians = (M_PI / 2), OnCardClick on_card_click = placeholder_card_click, const ImVec2& card_size = Config::default_card_size) {
+void hand(CardDeck& cards, const ImVec2& starting_position, double radians = (M_PI / 2), OnCardClick on_card_click = placeholder_card_click, bool active = false, const ImVec2& card_size = Config::default_card_size) {
     bool horizontal_cards = std::remainder(radians, M_PI) == 0;
-    bool playable_cards = radians == M_PI / 2;
+    bool playable_cards = active && radians == M_PI / 2;
     int i = 0;
     for (const auto& card: cards) {
         float x = horizontal_cards ? starting_position.x : starting_position.x + (i * Config::card_spacing);
@@ -186,6 +186,7 @@ int main(int , char *[])
 
         Card vira = table.get_vira();
         Player first_player = table.get_first_player();
+        Player current_player = table.get_current_player();
         HandPosition first_player_position = players_positions[first_player];
         std::vector<Play> plays = table.get_plays();
 
@@ -197,7 +198,8 @@ int main(int , char *[])
             PositionsMap positions = get_positions(cards.size());
             HandPosition player_position = players_positions[player];
             auto [position, radians] = positions[player_position];
-            hand(cards, position, radians, play_card);
+            bool is_turn = player == current_player;
+            hand(cards, position, radians, play_card, is_turn);
         }
 
         for (const auto& play: plays) {

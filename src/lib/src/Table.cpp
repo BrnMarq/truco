@@ -45,6 +45,10 @@ Player Table::get_first_player() const {
     return play_order.front();
 }
 
+Player Table::get_current_player() const {
+    return *(current_player);
+}
+
 Card Table::get_vira() const {
     return vira;
 }
@@ -57,7 +61,7 @@ std::vector<Player> Table::get_players() const {
     std::vector<Player> players;
     for (int i = 0; i < 2; ++i)
         for (int j = 0; j < 2; ++j)
-            players.push_back(teams[i].players[j]);
+            players.push_back(teams[j].players[i]);
     return players;
 }
 
@@ -211,6 +215,7 @@ int Table::get_team_position(Player player)
                 return i;
         }
     }
+    return -1;
 };
 // This function should get the round winner, set the winner as current_player, and add round_winners
 // array which team won(round_winners array works in the way that, nullptr is a tie, ptr to team1 is team1 winner and so on)

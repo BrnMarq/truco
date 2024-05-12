@@ -52,6 +52,7 @@ public:
     void raise_value();
     void activate_envido();
     Player get_first_player() const;
+    Player get_current_player() const;
     Card get_vira() const;
     std::vector<Play> get_plays() const;
     std::vector<Player> get_players() const;
