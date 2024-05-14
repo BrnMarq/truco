@@ -57,6 +57,7 @@ public:
     std::vector<Play> get_plays() const;
     std::vector<Player> get_players() const;
     std::list<Player> get_play_order() const;
+    std::vector<Team> get_teams() const;
 
     void change_vira(Card card);
     CardValues get_card_values();
@@ -66,12 +67,12 @@ public:
 
     void play_card(Card& card, bool burnt = false);
 
-    int get_team_position(Player player);
+    Team& get_team_by_player(const Player& player);
     Team* get_envido_winner();
 
     PlayerNode* get_round_winner();
     void update_round_winners();
-    Team get_table_winner();
+    Team* get_table_winner();
     Team* get_game_winner();
     void update_table();
 };

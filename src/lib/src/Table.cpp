@@ -66,6 +66,10 @@ std::list<Player> Table::get_play_order() const {
     return play_order;
 }
 
+std::vector<Team> Table::get_teams() const {
+    return teams;
+}
+
 //This function returns a generic CardValue 
 CardValues Table::get_card_values()
 {
@@ -207,17 +211,16 @@ PlayerNode* Table::get_round_winner() {
 
 //This function returns the player's team position on the teams vector. It'll return just 0 or 1
 //since teams vector just contains 2 elements. 
-int Table::get_team_position(Player player) 
+Team& Table::get_team_by_player(const Player& player) 
 {
     for (size_t i = 0; i < 2; i++)
     {
         for (size_t j = 0; j < 2; j++)
         {
-            if (teams[i].players[j].get_name() == player.get_name())
-                return i;
+            if (teams[i].players[j] == player)
+                return teams[i];
         }
     }
-    return -1;
 };
 // This function should get the round winner, set the winner as current_player, and add round_winners
 // array which team won(round_winners array works in the way that, nullptr is a tie, ptr to team1 is team1 winner and so on)
@@ -228,45 +231,47 @@ void Table::update_round_winners() {
     if (winner != nullptr) 
     {
         current_player = *winner;
-        round_winners.push_back(&teams[get_team_position(*current_player)]);
+        round_winners.push_back(&get_team_by_player(*current_player));
     }
     else 
     {
         current_player = get_next_player();
         round_winners.push_back(nullptr);
     }
+
+    plays.clear();
 };
 
 // This function should calculate which team won the table based on the round_winners array
-Team Table::get_table_winner() {
-
-    //No tie case
+Team* Table::get_table_winner() {
+    if (round_winners.size() < 2) return nullptr;
 
     std::unordered_map<Team*, int> counter;
+    Team* first_winner = nullptr;
+    bool teams_tied = std::any_of(round_winners.begin(), round_winners.end(), [](Team* team) {
+        return team == nullptr;
+    });
+    Player first_player = play_order.front();
 
-    for (auto winner : round_winners)
-    {
+    for (auto winner: round_winners)
         if (winner != nullptr) {
             counter[winner]++;
+            if (counter[winner] == 2) return winner;
+            first_winner = winner;
+        }
 
-            if (counter[winner] == 2) {
-                return *winner;
-            }
-        }       
-    }
+    if (teams_tied) return first_winner ?: &get_team_by_player(first_player);
 
-    //Tie cases
-
-    if (round_winners[0] == nullptr && round_winners[1] != nullptr)
-        return *round_winners[1];
-    else if (round_winners[1] == nullptr && round_winners[0] != nullptr)
-        return *round_winners[0];
-    else if(round_winners[2] == nullptr && round_winners[0] != nullptr)
-        return *round_winners[0];
-    else if(round_winners[0] == nullptr && round_winners[1] == nullptr && round_winners[2] != nullptr)
-        return *round_winners[2];
-    else
-        return teams[get_team_position(*plays[0].player)];
+    // if (round_winners[0] == nullptr && round_winners[1] != nullptr)
+    //     return round_winners[1];
+    // else if (round_winners[1] == nullptr && round_winners[0] != nullptr)
+    //     return round_winners[0];
+    // else if(round_winners[2] == nullptr && round_winners[0] != nullptr)
+    //     return round_winners[0];
+    // else if(round_winners[0] == nullptr && round_winners[1] == nullptr && round_winners[2] != nullptr)
+    //     return round_winners[2];
+    // else
+    //     return &teams[get_team_position(*plays[0].player)];
 };
 
 // This function should check if there's a winner, if the points of one of the teams is greater than twelve
@@ -287,15 +292,15 @@ Team* Table::get_envido_winner() {
     int player_4 = (*plays[3].player).get_envido_value();
 
     if (player_1 == player_2 == player_3 == player_4)
-        return &teams[get_team_position(*plays[0].player)];
+        return &get_team_by_player(*plays[0].player);
 
     int team_1 = player_1 > player_3 ? player_1 : player_3;
     int team_2 = player_2 > player_4 ? player_2 : player_4;
 
     if (team_1 > team_2)
-       return &teams[get_team_position(*plays[0].player)];
+        return &get_team_by_player(*plays[0].player);
     else
-       return &teams[get_team_position(*plays[1].player)];
+        return &get_team_by_player(*plays[1].player);
 }
 
 // update_table should get the table winner, update the play_order, set the current_player as the beginning of the list
@@ -303,7 +308,7 @@ Team* Table::get_envido_winner() {
 // set the value again as 1, set the envido as false, this function should do a lot of shit xd, once you get here call me
 void Table::update_table() {
 
-    Team winner = get_table_winner();
+    Team winner = *get_table_winner();
     winner.points += value;
 
     if (envido) {

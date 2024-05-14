@@ -162,6 +162,7 @@ int main(int , char *[])
     HelloImGui::RunnerParams params;
     HelloImGui::SetAssetsFolder("assets");
     ImVec2 card_size = Config::default_card_size;
+    int game_delay = Config::game_delay;
     rng_t seed(time(nullptr));
 
     Table table = initialize_game(seed);
@@ -184,8 +185,13 @@ int main(int , char *[])
         Player current_player = table.get_current_player();
         HandPosition first_player_position = players_positions[first_player];
         std::vector<Play> plays = table.get_plays();
+        std::vector<Team> teams = table.get_teams();
+        for (auto const& team: teams) {
+            ImGui::Text(std::to_string(team.points).c_str());
+        }
 
         bool is_player_turn = game_player == current_player;
+        bool all_players_played = plays.size() >= 4;
 
         auto play_card = [&](Card card) {
             table.play_card(card);
@@ -195,7 +201,7 @@ int main(int , char *[])
             PositionsMap positions = get_positions(cards.size());
             HandPosition player_position = players_positions[player];
             auto [position, radians] = positions[player_position];
-            hand(cards, position, radians, play_card, is_player_turn);
+            hand(cards, position, radians, play_card, (is_player_turn && !all_players_played));
         }
 
         for (const auto& play: plays) {
@@ -207,10 +213,17 @@ int main(int , char *[])
 
         auto [vira_position, vira_radians] = vira_positions[first_player_position];
         card(vira, vira_position, vira_radians);
+        
+        if (all_players_played) {
+            if (++i == game_delay) {
+                table.update_round_winners();
+                i = 0;
+            }
+        }
 
-        if (is_player_turn) return;
-
-        if (++i == 100) {
+        if (is_player_turn || all_players_played) return;
+        if (++i == game_delay) {
+            if (table.get_current_player().get_cards().size() < 1) return;
             play_card(table.get_current_player().get_cards().front());
             i = 0;
         }

@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include <array>
 #include <list>
+#include <queue>
 
 using rd_t = std::random_device;
 using rng_t = std::mt19937;
