@@ -260,7 +260,7 @@ Team* Table::get_table_winner() {
             first_winner = winner;
         }
 
-    if (teams_tied) return first_winner ?: &get_team_by_player(first_player);
+    if (teams_tied) return first_winner != nullptr ? first_winner : &get_team_by_player(first_player);
     return nullptr;
 };
 
