@@ -8,6 +8,7 @@
 #include <array>
 #include <list>
 #include <queue>
+#include <algorithm>
 
 using rd_t = std::random_device;
 using rng_t = std::mt19937;

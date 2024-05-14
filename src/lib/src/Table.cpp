@@ -261,17 +261,7 @@ Team* Table::get_table_winner() {
         }
 
     if (teams_tied) return first_winner ?: &get_team_by_player(first_player);
-
-    // if (round_winners[0] == nullptr && round_winners[1] != nullptr)
-    //     return round_winners[1];
-    // else if (round_winners[1] == nullptr && round_winners[0] != nullptr)
-    //     return round_winners[0];
-    // else if(round_winners[2] == nullptr && round_winners[0] != nullptr)
-    //     return round_winners[0];
-    // else if(round_winners[0] == nullptr && round_winners[1] == nullptr && round_winners[2] != nullptr)
-    //     return round_winners[2];
-    // else
-    //     return &teams[get_team_position(*plays[0].player)];
+    return nullptr;
 };
 
 // This function should check if there's a winner, if the points of one of the teams is greater than twelve
