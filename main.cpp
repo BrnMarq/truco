@@ -176,6 +176,7 @@ int main(int , char *[])
     params.appWindowParams.windowGeometry.fullScreenMode = Config::screen_mode;
     params.fpsIdling.enableIdling = Config::idling;
     int i = 0;
+    int a = 0;
     auto guiFunction = [&]() {
         players = table.get_players();
         PositionsMap vira_positions = get_vira_positions();
@@ -187,16 +188,15 @@ int main(int , char *[])
         HandPosition first_player_position = players_positions[first_player];
         std::vector<Play> plays = table.get_plays();
 
-        std::vector<Team> teams = table.get_teams();
         ImGui::SetCursorPos(ImVec2(ImGui::GetWindowSize().x * 10 / 12, 20));
         if (ImGui::BeginTable("team_counter", 2, ImGuiTableFlags_NoHostExtendX)) {
             ImGui::TableSetupColumn("Team 1", ImGuiTableColumnFlags_WidthFixed);
             ImGui::TableSetupColumn("Team 2", ImGuiTableColumnFlags_WidthFixed);
             ImGui::TableHeadersRow();
             ImGui::TableNextRow();
-            for (int column = 0; column < teams.size(); ++column) {
+            for (int column = 0; column < table.teams.size(); ++column) {
                 ImGui::TableSetColumnIndex(column);
-                ImGui::Text("%d", teams[column].points);
+                ImGui::Text("%d", table.teams[column].points);
             }
             ImGui::EndTable();
         }
@@ -226,16 +226,19 @@ int main(int , char *[])
         card(vira, vira_position, vira_radians);
 
         Team* game_winner = table.get_game_winner();
-        if (game_winner != nullptr) {
+        bool theres_winner = game_winner != nullptr;
+        ImVec2 center = ImGui::GetWindowSize() / 2;
+
+        if (theres_winner) {
             plays.clear();
-            ImGui::SetCursorPos(ImGui::GetWindowSize() / 2);
-            bool team1_won = table.get_team_by_player(players[0]) == game_winner;
+            ImVec2 center = ImGui::GetWindowSize() / 2;
+            ImGui::SetCursorPos(ImVec2(center.x - 130, center.y));
+            bool team1_won = *table.get_team_by_player(game_player) == *game_winner;
             ImGui::Text("%s %d! Terminando el juego...", "Ha ganado el equipo", team1_won ? 1 : 2);
-            for (int a = 0; a < game_delay; ++a) {
-                HelloImGui::GetRunnerParams()->appShallExit = true;
-            }
+            if (++a == (game_delay * 3)) params.appShallExit = true;
         }
 
+        if (a > 0) return;
         if (all_players_played) {
             if (++i == game_delay) {
                 table.update_round_winners();

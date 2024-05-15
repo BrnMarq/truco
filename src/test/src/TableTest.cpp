@@ -5,6 +5,7 @@ int main() {
   {
     std::vector<Player> players;
     CardDeck full_deck = CardDeck::create_full_deck();
+    Card vira = full_deck.get_card();
     full_deck.shuffle(seed);
     for (int i = 0; i < 4; ++i) {
         CardDeck deck;
@@ -13,9 +14,8 @@ int main() {
             if (i != 3) card.flip();
             deck.push_front(card);
         }
-        players.push_back(Player(deck, "Jugador " + std::to_string(i + 1)));
+        players.push_back(Player(deck, "Jugador " + std::to_string(i + 1), vira));
     }
-    Card vira = full_deck.get_card();
     Table table = Table(vira, players);
 
     std::cout << "Size play_order test" << std::endl;
