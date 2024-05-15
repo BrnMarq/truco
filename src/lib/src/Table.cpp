@@ -325,13 +325,13 @@ void Table::update_table(rng_t& seed) {
 
     // if (envido) {
     Team* envido_winner = get_envido_winner();
-    envido_winner->points += 2;
+    envido_winner->points += Settings::envido_points;
     // }
 
     std::vector<Player> players_with_flower = get_players_with_flower();
     for (const auto& player: players_with_flower) {
         Team* flower_team = get_team_by_player(player);
-        flower_team->points += 3;
+        flower_team->points += Settings::flower_points;
     }
 
     update_play_order();
