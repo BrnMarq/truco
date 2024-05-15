@@ -70,6 +70,10 @@ std::vector<Team> Table::get_teams() const {
     return teams;
 }
 
+void Table::points_test() {
+    teams[0].points = 70;
+}
+
 //This function returns a generic CardValue 
 CardValues Table::get_card_values()
 {
@@ -126,7 +130,6 @@ CardValues Table::get_card_values()
 // Calculate the staircase based on which is the vira(I suggest to go from 1-n, the greater the number,
 // the greater the power)(Burnt cards should have a value of 0, but it is okay if it is not included on the staircase)
 CardValues Table::calculate_staircase() {
-
     CardValues result = get_card_values();
 
     result[Card(vira.get_suit(), Rank::Ten)] = 15;
@@ -211,14 +214,14 @@ PlayerNode* Table::get_round_winner() {
 
 //This function returns the player's team position on the teams vector. It'll return just 0 or 1
 //since teams vector just contains 2 elements. 
-Team& Table::get_team_by_player(const Player& player) 
+Team* Table::get_team_by_player(const Player& player) 
 {
     for (size_t i = 0; i < 2; i++)
     {
         for (size_t j = 0; j < 2; j++)
         {
             if (teams[i].players[j] == player)
-                return teams[i];
+                return &teams[i];
         }
     }
 };
@@ -231,7 +234,7 @@ void Table::update_round_winners() {
     if (winner != nullptr) 
     {
         current_player = *winner;
-        round_winners.push_back(&get_team_by_player(*current_player));
+        round_winners.push_back(get_team_by_player(*current_player));
     }
     else 
     {
@@ -260,58 +263,83 @@ Team* Table::get_table_winner() {
             first_winner = winner;
         }
 
-    if (teams_tied) return first_winner != nullptr ? first_winner : &get_team_by_player(first_player);
+    if (teams_tied) return first_winner != nullptr ? first_winner : get_team_by_player(first_player);
     return nullptr;
 };
 
 // This function should check if there's a winner, if the points of one of the teams is greater than twelve
 // then return a pointer to that theam, otherwise, just return nullptr
 Team* Table::get_game_winner() {
-
-    if (teams[0].points > 12) return &teams[0];
-    else if (teams[1].points > 12) return &teams[1];
+    if (teams[0].points >= Settings::win_points) return &teams[0];
+    else if (teams[1].points >= Settings::win_points) return &teams[1];
     else return nullptr;
 };
 
 //This function returns the team with the highest envido 
 Team* Table::get_envido_winner() {
-
     int player_1 = (*plays[0].player).get_envido_value();
     int player_2 = (*plays[1].player).get_envido_value();
     int player_3 = (*plays[2].player).get_envido_value();
     int player_4 = (*plays[3].player).get_envido_value();
 
-    if (player_1 == player_2 == player_3 == player_4)
-        return &get_team_by_player(*plays[0].player);
-
     int team_1 = player_1 > player_3 ? player_1 : player_3;
     int team_2 = player_2 > player_4 ? player_2 : player_4;
 
+    if (team_1 == team_2) return get_team_by_player(*(play_order.begin()));
     if (team_1 > team_2)
-        return &get_team_by_player(*plays[0].player);
+        return &teams[0];
     else
-        return &get_team_by_player(*plays[1].player);
+        return &teams[1];
+}
+
+void Table::deal_cards(rng_t& seed) {
+    CardDeck full_deck = CardDeck::create_full_deck();
+    full_deck.shuffle(seed);
+    vira = full_deck.get_card();
+    for (auto& player: play_order) {
+        CardDeck hand;
+        for (int j = 0; j < 3; ++j) {
+            Card card = full_deck.get_card();
+            if (player != teams[0].players[0]) card.flip();
+            hand.push_front(card);
+        }
+        player.set_cards(hand, vira);
+    }
+}
+
+std::vector<Player> Table::get_players_with_flower() {
+    std::vector<Player> players;
+    std::copy_if(play_order.begin(), play_order.end(), std::back_inserter(players), [](Player player) {
+        return player.get_has_flower();
+    });
+    return players;
 }
 
 // update_table should get the table winner, update the play_order, set the current_player as the beginning of the list
 // add the value of the table to the points of the team, add the envido value, in case there was envido
 // set the value again as 1, set the envido as false, this function should do a lot of shit xd, once you get here call me
-void Table::update_table() {
+void Table::update_table(rng_t& seed) {
+    Team* winner = get_table_winner();
+    if (winner == nullptr) return;
+    winner->points += value;
 
-    Team winner = *get_table_winner();
-    winner.points += value;
+    // if (envido) {
+    Team* envido_winner = get_envido_winner();
+    envido_winner->points += 2;
+    // }
 
-    if (envido) {
-        Team* envido_winner = get_envido_winner();
-        envido_winner->points += 2;
+    std::vector<Player> players_with_flower = get_players_with_flower();
+    for (const auto& player: players_with_flower) {
+        Team* flower_team = get_team_by_player(player);
+        flower_team->points += 3;
     }
-
-    //current_player as the beginning of the list
 
     update_play_order();
     current_player = play_order.begin();
+    round_winners.clear();
 
     value = 1;
     envido = false;
-};
 
+    deal_cards(seed);
+};

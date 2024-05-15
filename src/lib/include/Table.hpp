@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Player.hpp"
+#include "Settings.hpp"
 
 using CardValues = std::unordered_map<Card, int, CardHash>;
 using PlayerNode = std::list<Player>::iterator;
@@ -30,6 +31,16 @@ struct Team {
     Team(const Team& team) : players{ team.players }, points{ 0 } {
 
     }
+
+    Team(Team& team) {
+        players = team.players;
+        points = team.points;
+    }
+
+    bool operator == (const Team& team) const noexcept 
+    {
+        return points == team.points && players == team.players;
+    };
 };
 
 class Table
@@ -41,10 +52,10 @@ private:
     CardValues staircase;
     std::vector<Play> plays;
     std::vector<Team*> round_winners;
-    std::vector<Team> teams;
     std::list<Player> play_order;
     PlayerNode current_player;
 public:
+    std::vector<Team> teams;
     Table(Card& vira, std::vector<Team>& teams);
     Table(Card& vira, std::vector<Player>& players);
     ~Table();
@@ -58,8 +69,8 @@ public:
     std::vector<Player> get_players() const;
     std::list<Player> get_play_order() const;
     std::vector<Team> get_teams() const;
+    void points_test();
 
-    void change_vira(Card card);
     CardValues get_card_values();
     CardValues calculate_staircase();
     void update_play_order();
@@ -67,12 +78,14 @@ public:
 
     void play_card(Card& card, bool burnt = false);
 
-    Team& get_team_by_player(const Player& player);
+    Team* get_team_by_player(const Player& player);
     Team* get_envido_winner();
 
     PlayerNode* get_round_winner();
     void update_round_winners();
     Team* get_table_winner();
     Team* get_game_winner();
-    void update_table();
+    void deal_cards(rng_t& seed);
+    std::vector<Player> get_players_with_flower();
+    void update_table(rng_t& seed);
 };

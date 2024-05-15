@@ -143,6 +143,7 @@ Table initialize_game(rng_t& seed) {
     std::vector<Player> players;
     CardDeck full_deck = CardDeck::create_full_deck();
     full_deck.shuffle(seed);
+    Card vira = full_deck.get_card();
     for (int i = 0; i < 4; ++i) {
         CardDeck deck;
         for (int j = 0; j < 3; ++j) {
@@ -150,9 +151,8 @@ Table initialize_game(rng_t& seed) {
             if (i != 0) card.flip();
             deck.push_front(card);
         }
-        players.push_back(Player(deck, "Jugador " + std::to_string(i + 1)));
+        players.push_back(Player(deck, "Jugador " + std::to_string(i + 1), vira));
     }
-    Card vira = full_deck.get_card();
     Table table = Table(vira, players);
     return table;
 }
@@ -163,7 +163,7 @@ int main(int , char *[])
     HelloImGui::SetAssetsFolder("assets");
     ImVec2 card_size = Config::default_card_size;
     int game_delay = Config::game_delay;
-    rng_t seed(time(nullptr));
+    rng_t seed(time(NULL));
 
     Table table = initialize_game(seed);
     std::vector<Player> players = table.get_players();
@@ -174,6 +174,7 @@ int main(int , char *[])
     params.appWindowParams.windowTitle = Config::title;
     params.imGuiWindowParams.backgroundColor = Config::background_color;
     params.appWindowParams.windowGeometry.fullScreenMode = Config::screen_mode;
+    params.fpsIdling.enableIdling = Config::idling;
     int i = 0;
     auto guiFunction = [&]() {
         players = table.get_players();
@@ -185,9 +186,19 @@ int main(int , char *[])
         Player current_player = table.get_current_player();
         HandPosition first_player_position = players_positions[first_player];
         std::vector<Play> plays = table.get_plays();
+
         std::vector<Team> teams = table.get_teams();
-        for (auto const& team: teams) {
-            ImGui::Text(std::to_string(team.points).c_str());
+        ImGui::SetCursorPos(ImVec2(ImGui::GetWindowSize().x * 10 / 12, 20));
+        if (ImGui::BeginTable("team_counter", 2, ImGuiTableFlags_NoHostExtendX)) {
+            ImGui::TableSetupColumn("Team 1", ImGuiTableColumnFlags_WidthFixed);
+            ImGui::TableSetupColumn("Team 2", ImGuiTableColumnFlags_WidthFixed);
+            ImGui::TableHeadersRow();
+            ImGui::TableNextRow();
+            for (int column = 0; column < teams.size(); ++column) {
+                ImGui::TableSetColumnIndex(column);
+                ImGui::Text("%d", teams[column].points);
+            }
+            ImGui::EndTable();
         }
 
         bool is_player_turn = game_player == current_player;
@@ -213,10 +224,22 @@ int main(int , char *[])
 
         auto [vira_position, vira_radians] = vira_positions[first_player_position];
         card(vira, vira_position, vira_radians);
-        
+
+        Team* game_winner = table.get_game_winner();
+        if (game_winner != nullptr) {
+            plays.clear();
+            ImGui::SetCursorPos(ImGui::GetWindowSize() / 2);
+            bool team1_won = table.get_team_by_player(players[0]) == game_winner;
+            ImGui::Text("%s %d! Terminando el juego...", "Ha ganado el equipo", team1_won ? 1 : 2);
+            for (int a = 0; a < game_delay; ++a) {
+                HelloImGui::GetRunnerParams()->appShallExit = true;
+            }
+        }
+
         if (all_players_played) {
             if (++i == game_delay) {
                 table.update_round_winners();
+                table.update_table(seed);
                 i = 0;
             }
         }
@@ -233,6 +256,3 @@ int main(int , char *[])
     HelloImGui::Run(params);
     return 0;
 }
-
-// if (ImGui::Button("Bye!"))
-//     HelloImGui::GetRunnerParams()->appShallExit = true;

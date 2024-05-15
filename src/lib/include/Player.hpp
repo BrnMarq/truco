@@ -12,7 +12,7 @@ private:
   CardDeck cards;
 public:
   Player();
-  Player(CardDeck& cards, std::string name);
+  Player(CardDeck& cards, std::string name, Card& vira);
   ~Player();
 
   // Getters

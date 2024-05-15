@@ -4,11 +4,13 @@
 // As a general thought, take in mind that every member of the class Player is accesible
 // in this functions, as if it were variables inside the functions
 
-Player::Player() {
+Player::Player(): has_flower{false}, envido_value{0}, can_raise_value{true}  {
 };
 
-Player::Player(CardDeck& cards, std::string name): cards{cards}, name{name}
+Player::Player(CardDeck& cards, std::string name, Card& vira): cards{cards}, name{name}, can_raise_value{true}
 {
+  has_flower = calculate_flower(vira);
+  envido_value = calculate_envido(vira);
 }
 
 Player::~Player()
@@ -27,6 +29,7 @@ CardDeck Player::get_cards() const { return cards; }
 
 // This function should calculate the envido based on which suit is the vira
 int Player::calculate_envido(const Card& vira) {
+  if (has_flower) return 0;
 
   std::map<std::tuple <Rank, Suit>, int> table_value;
 
@@ -190,8 +193,8 @@ void Player::play_card(const Card& card) {
 // if the player has flower
 void Player::set_cards(const CardDeck& cards_1, const Card& vira) {
   cards = cards_1;
-  envido_value = calculate_envido(vira);
   has_flower = calculate_flower(vira);
+  envido_value = calculate_envido(vira);
 };
 
 bool Player::operator == (const Player& player) const noexcept
